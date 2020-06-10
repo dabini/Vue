@@ -10,15 +10,13 @@
           <textarea v-model="articleData.content" id="content" cols="30" rows="10"></textarea>
       </div>
       <div>
-          <button @click="createArticle">Submit</button>
+          <button @click="createArticle(articleData)">Submit</button>
       </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
-const SERVER_URL = 'http://localhost:8000'
+import { mapActions } from 'vuex'
 
 export default {
     name: 'CreateView',
@@ -31,18 +29,7 @@ export default {
         }
     },
     methods: {
-        createArticle() {
-            const config = {
-                headers: {
-                    Authorization: `Token ${this.$cookies.get('auth-token')}`
-                }
-            }
-            // article 생성은 HEADER: Token, Body: {title, content}
-            axios.post(SERVER_URL + '/articles/create/', this.articleData, config )
-                .then(res => console.log(res.data))
-                .catch(err => console.log(err.response.data))
-        }
-
+        ...mapActions(['createArticle'])
     },
     created() {
         if (!this.$cookies.isKey('auth-token')) {

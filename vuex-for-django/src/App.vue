@@ -6,73 +6,25 @@
       <router-link v-if="!isLoggedIn" :to="{ name: 'Login'}">Login</router-link> |
       <router-link v-if="!isLoggedIn" :to="{ name: 'Signup'}">Signup</router-link> |
       <router-link v-if="isLoggedIn" :to="{ name: 'Create'}">New Article</router-link>
-      <router-link v-if="isLoggedIn" @click.native="logout" to="/accounts/logout">Logout</router-link>
+      <router-link v-if="isLoggedIn" @click.native="logout" :to="{ name: 'Logout'}">Logout</router-link>
     </div>
-    <router-view @submit-login-data="login" @submit-signup-data="signup"/>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-// axios.post(URL, BODY, HEADER)
-
-
-const SERVER_URL = 'http://localhost:8000'
-
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      isLoggedIn: false,
-    }
+  computed: {
+    ...mapGetters(['isLoggedIn'])
   },
   methods: {
     setCookie(token) {
       this.$cookies.set('auth-token', token)
       this.isLoggedIn = true
     },
-    signup(signupData) {
-      axios.post(SERVER_URL + '/rest-auth/signup/', signupData)
-        .then(res => {
-          this.setCookie(res.data.key)
-          this.$router.push({ name:'Home' })
-        })
-        .catch(err => console.log(err.response.data))
-    },
-    login(loginData) {
-      console.log(loginData)
-      axios.post(SERVER_URL + '/rest-auth/login/', loginData)
-        .then(res => {
-          this.setCookie(res.data.key)
-          this.$router.push({ name:'Home' })
-        })
-        .catch(err => console.log(err.response.data))
-    },
-    logout() {
-      const requestHeaders = {
-        headers: {
-          'Authorization' : `Token ${this.$cookies.get('auth-token')}`
-        }
-      }
-      axios.post(SERVER_URL + '/rest-auth/logout/', null ,requestHeaders )
-        .then(() => {
-          this.$cookies.remove('auth-token')
-          this.isLoggedIn = false
-          this.$router.push({ name: 'Home' })
-        })
-        .catch(err => console.log(err.response.data))
-    }
   },
-  mounted() {
-    // cookie에 auth-token이 있는지를 확인
-    if (this.$cookies.isKey('auth-token')) {
-      this.isLoggedIn = true
-    } else {
-      this.isLoggedIn = false
-    }
-  }
-}
 </script>
 
 <style>
