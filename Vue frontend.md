@@ -42,6 +42,7 @@
 
 - store
 
+ 자동 설치
   ```bash
   vue add vuex
   ```
