@@ -20,7 +20,7 @@
 
 
 
-- index.js
+- src/index.js
 
   ```js
   export defalt new Vuex.Store{
