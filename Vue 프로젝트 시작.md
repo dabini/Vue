@@ -92,6 +92,8 @@
   $ npm i axios
   ```
 
+  Install 대신
+
 
 
 
